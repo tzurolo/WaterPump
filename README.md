@@ -53,9 +53,9 @@ This produces two pulses for every rotation of the motor shaft (input to the gea
 There is also a "home position" sensor that tells when the plunger is pulled out to a particular position or more. This allows us to know the absolute position of the plunger. We reset the position count to zero when the sensor detects the reflector.
 
 ## Main Parts
-* Hsiang Neng HN-GH7.2-2414T gearmotor![image](https://user-images.githubusercontent.com/3086024/135380436-3cff30b6-1d07-405b-ae43-a55d1791d2f1.png)
+* Hsiang Neng HN-GH7.2-2414T gearmotor
 * Pololu Baby Orangutan B robot controller
-* (2) Pololu QTR-1A reflectance sensors
+* (2) Pololu QTR-1A reflectance sensor
 * DEPEPE 60ml Plastic Syringe
 * (2) Check Valve, 1/4 Inch 6mm PVDF Wear-Resistant One-Way Check Valve for Fuel Gas Liquid Air
 
