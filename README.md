@@ -35,7 +35,7 @@ The principal design elements:
 The microcontroller reads a water level sensor in the tank that tells when the tank is full. When full the pump pumps a predetermined amount of water out of the tank (2L in this case)
 
 ### How it pumps
-When the plunger is pulled out water is drawn in through the intake one-way valve, while the outflow one-way valve blocks back flow frome the output. When the plunger is pushed in water is pushed through the outflow one-way valves while the intake valve blocks flow back to the intake.
+When the plunger is pulled out water is drawn in through the intake one-way valve, while the outflow one-way valve blocks back flow from the output. When the plunger is pushed in water is pushed through the outflow one-way valves while the intake valve blocks flow back to the intake.
 
 ![Water Flow](/images/WaterFlow.png)
 
