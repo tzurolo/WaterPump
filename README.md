@@ -26,7 +26,7 @@ I spent many unhappy hours searching online for an off-the-shelf pump to do this
 The principal design elements:
 * A 60ml medical syringe and two one-way valves for the water handling itself.
 * The plunger of the syringe is pushed and pulled by a 1/4-20 threaded rod mounted on a ball bearing.
-* A DC gearmotor turns the threaded rod
+* A DC gearmotor that turns the threaded rod
 * Reflectance sensors that are used for
    1. gearmotor tachometer/odometer
    2. syringe plunger home position sensor
