@@ -48,7 +48,7 @@ We need to know where the plunger is, and for that we use a simple tachometer / 
 
 ![Tachometer / Odometer](/images/TachometerOdometer.png)
 
-This produces two pulses for every rotation of the motor shaft (input to the gearhead). Counting these pulses tells us how many times the threaded rod is rotated. The threaded rod moves the syringe plunger 1/20" for each rotation of the output shaft (output of the gearhead).
+This produces two pulses for every rotation of the motor shaft (input to the gearhead). Counting these pulses tells us how many times the threaded rod is rotated. The threaded rod moves the syringe plunger 1/20" for each rotation of the output shaft (output of the gearhead). We don't get direction with this approach, so we always bring the motor to a full stop before changing direction.
 
 There is also a "home position" sensor that tells when the plunger is pulled out to a particular position or more. This allows us to know the absolute position of the plunger. We reset the position count to zero when the sensor detects the reflector, and count motor shaft pulses from there.
 
