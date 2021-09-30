@@ -17,7 +17,7 @@ There were a few motivations for this project:
 * automatically turn on and off
 * IoT capable - can be connected to my home automation network
 * low voltage
-* low cost / use stuff I have laying around
+* low cost / build out of stuff I have laying around
 * relatively quiet
 
 I spent many unhappy hours searching online for an off-the-shelf pump to do this, but didn't find anything that met all my requirements. And, as I mentioned above, I like to design and build things like this.
