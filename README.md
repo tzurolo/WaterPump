@@ -1,6 +1,6 @@
 # WaterPump
-Low flow high static head water pump to empty my dehumidifier reservoir and water plants
-This pump uses a 60ml plastic syringe, two one-way valves, a 12V gearmotor, and a microcontroller
+Low flow high static head water pump to empty my dehumidifier reservoir and water plants.
+This pump uses a 60ml plastic syringe, two one-way valves, a DC gearmotor, and a microcontroller.
 
 ## Motivation
 There were two motivations for this project:
