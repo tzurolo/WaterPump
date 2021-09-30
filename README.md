@@ -39,6 +39,8 @@ When the plunger is pulled out water is drawn in through the intake one-way valv
 
 ![Water Flow](/images/WaterFlow.png)
 
+This is of course very slow, but it has no trouble keeping up with the dehumidifier, which produces water a drip at a time.
+
 ### Motor Control
 The Pololu Baby Orangutan B robot controller has two built-in DC motor drivers. We use one of them to drive the DC gearmotor.
 
