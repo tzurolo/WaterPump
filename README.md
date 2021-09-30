@@ -25,5 +25,5 @@ I spent many unhappy hours searching online for an off-the-shelf pump to do this
 * The plunger of the syringe is pushed and pulled by a 1/4-20 threaded rod mounted on a ball bearing.
 * A DC gearmotor turns the threaded rod
 * Reflectance sensors are used for
-   * gearmotor tachometer/odometer
-   * syringe plunger home position sensor
+   1. gearmotor tachometer/odometer
+   2. syringe plunger home position sensor
