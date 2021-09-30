@@ -4,9 +4,9 @@ This pump uses a 60ml plastic syringe, two one-way valves, a DC gearmotor, and a
 ![Water Pump](/images/WaterPumpFigure.png)
  
 ## Motivation
-There were two motivations for this project:
+There were a few motivations for this project:
 1. I dislike having to go down to the basement to empty the dehumidifier reservoir all summer
-2. plants outside need to be watered regularly
+2. Plants outside need to be watered regularly
 3. I like projects that involve microcontrollers
 
 ## Requirements / Design Goals
@@ -14,7 +14,7 @@ There were two motivations for this project:
 * self-priming
 * can be run dry without damage
 * automatically turn on and off
-* IoT capable
+* IoT capable - can be connected to my home automation network
 * low voltage
 * relatively quiet
 
@@ -25,5 +25,5 @@ I spent many unhappy hours searching online for an off-the-shelf pump to do this
 * The plunger of the syringe is pushed and pulled by a 1/4-20 threaded rod mounted on a ball bearing.
 * A DC gearmotor turns the threaded rod
 * Reflectance sensors are used for
-* 1. gearmotor tachometer/odometer
-* 2. syringe plunger home position sensor
+ 1. gearmotor tachometer/odometer
+ 2. syringe plunger home position sensor
