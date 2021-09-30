@@ -18,12 +18,12 @@ There were two motivations for this project:
 * low voltage
 * relatively quiet
 
-I spent many unhappy hours searching online for an off-the-shelf pump to do this, but didn't find anything that met all my requirements.
+I spent many unhappy hours searching online for an off-the-shelf pump to do this, but didn't find anything that met all my requirements. Plus I like to design and build things like this.
 
 ## Design
 * A 60ml medical syringe and two one-way valves for the water handling itself.
 * The plunger of the syringe is pushed and pulled by a 1/4-20 threaded rod mounted on a ball bearing.
 * A DC gearmotor turns the threaded rod
 * Reflectance sensors are used for
-1. gearmotor tachometer/odometer
-2. syringe plunger home position sensor
+* 1. gearmotor tachometer/odometer
+* 2. syringe plunger home position sensor
