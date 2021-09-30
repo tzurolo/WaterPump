@@ -44,13 +44,13 @@ This is of course very slow, but it has no trouble keeping up with the dehumidif
 ### Motor Control
 The Pololu Baby Orangutan B robot controller has two built-in DC motor drivers. We use one of them to drive the DC gearmotor.
 
-We need to know where the plunger is, and for that we use a simple tachometer / odometer consisting of a Pololu QTR-1A reflectance sensor and a piece of aluminum mounted on the gearmotor's extended shaft:
+We need to know where the plunger is. To get relative position we use a simple tachometer / odometer consisting of a Pololu QTR-1A reflectance sensor and a piece of aluminum mounted on the gearmotor's extended shaft:
 
 ![Tachometer / Odometer](/images/TachometerOdometer.png)
 
 This produces two pulses for every rotation of the motor shaft (input to the gearhead). Counting these pulses tells us how many times the threaded rod is rotated. The threaded rod moves the syringe plunger 1/20" for each rotation of the output shaft (output of the gearhead). We don't get direction with this approach, so we always bring the motor to a full stop before changing direction.
 
-There is also a "home position" sensor that tells when the plunger is pulled out to a particular position or more. This allows us to know the absolute position of the plunger. We reset the position count to zero when the sensor detects the reflector, and count motor shaft pulses from there.
+For absolute position there is also a reflectance sensor that tells when the plunger has reached the edge of the "home position". We reset the position count to zero when the sensor detects the reflector, and count motor shaft pulses from there.
 
 ## Main Parts
 * Hsiang Neng HN-GH7.2-2414T gearmotor
