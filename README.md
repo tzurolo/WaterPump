@@ -66,10 +66,11 @@ The sensor consists of a Pololu QTR-1A reflectance sensor and a ping pong ball i
 When the ball floats up to the reflectance sensor a signal goes to the microcontroller telling it the tank is full.
 
 ## Control program
-The code running on the microcontroller monitors the input from the reflectance sensor. When the tank is full the program
-runs the gearmotor to pull the plunger out of the syringe until it reaches the fully-out position.
-Odometer values for the fully-out and fully-in plunger positions are stored in EEPROM, as well as the motor PWM speed.
-When it completes one syringe cycle (drawing in and then pushing out) it emits a message reporting how many milliliters of water it pumped.
+The code running on the microcontroller monitors the input from the tank-full reflectance sensor. When the tank is full the program
+runs the gearmotor to pull the plunger out of the syringe until it reaches the fully-out position. Then it runs the gearmotor in
+the opposite direction to push the water out. This cycle is repeated until the preset volume of water has been pumped.
+Odometer values for the fully-out and fully-in plunger positions are stored in EEPROM, as well as the motor PWM speed and how much water to pump when the tank is full.
+When it completes one syringe cycle (drawing in and then pushing out) it emits a message (on TX of the UART) reporting how many milliliters of water it pumped.
 
 ## Results
 The pump was put into operation mid-July 2021 and has been emptying the dedumidifier tank ever since.
