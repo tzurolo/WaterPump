@@ -74,6 +74,6 @@ When it completes one syringe cycle (drawing in and then pushing out) it emits a
 
 ## Results
 The pump was put into operation mid-July 2021 and has been emptying the dedumidifier tank ever since.
-One thing that falls short of meeting all the requirements is that it is not as quiet as I would like. It's not really loud, at least not louder than the dehumidifier fan, but I wanted it to be almost inaudible.
+One thing that falls short of meeting all the requirements is that it is not as quiet as I would like. It's not exactly loud, at least not louder than the dehumidifier fan, but I wanted it to be almost inaudible.
 The noise comes from the DC gearmotor. I think using a brushless DC gearmotor might make it run quieter.
 
