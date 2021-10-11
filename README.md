@@ -17,16 +17,16 @@ There were a few motivations for this project:
 * automatically turn on and off
 * IoT capable - can be connected to my home automation network
 * low voltage
-* low cost / build out of stuff I have laying around
+* low cost / build mainly out of stuff I have laying around
 * relatively quiet
 
-I spent many unhappy hours searching online for an off-the-shelf pump to do this, but didn't find anything that met all my requirements. And, as I mentioned above, I like to design and build things like this.
+I spent many unhappy hours searching online for an off-the-shelf pump that meets most of these requirements, but didn't find anything suitable. And, as I alluded to above, I like to design and build things like this.
 
 ## Design
 The principal design elements:
 * A 60ml medical syringe and two one-way valves for the water handling itself.
-* The plunger of the syringe is pushed and pulled by a 1/4-20 threaded rod mounted on a ball bearing.
-* A DC gearmotor that turns the threaded rod
+* The plunger of the syringe is pushed and pulled by a threaded coupler on a 1/4-20 threaded rod. The rod is held in place by a ball bearing.
+* A DC gearmotor that turns the threaded rod which pushes and pulls the threaded coupler
 * Reflectance sensors that are used for
    1. gearmotor tachometer/odometer
    2. syringe plunger home position sensor
@@ -58,4 +58,21 @@ For absolute position there is also a reflectance sensor that tells when the plu
 * (2) Pololu QTR-1A reflectance sensor
 * DEPEPE 60ml Plastic Syringe
 * (2) Check Valve, 1/4 Inch 6mm PVDF Wear-Resistant One-Way Check Valve for Fuel Gas Liquid Air
+
+## Tank sensor
+(Not shown yet - I'll pull it out of the tank after the dehumidification season).
+This sensor is mounted in the dehumidifier tank and detects when the tank becomes full.
+The sensor consists of a Pololu QTR-1A reflectance sensor and a ping pong ball in an acrylic cage.
+When the ball floats up to the reflectance sensor a signal goes to the microcontroller telling it the tank is full.
+
+## Control program
+The code running on the microcontroller monitors the input from the reflectance sensor. When the tank is full the program
+runs the gearmotor to pull the plunger out of the syringe until it reaches the fully-out position.
+Odometer values for the fully-out and fully-in plunger positions are stored in EEPROM, as well as the motor PWM speed.
+When it completes one syringe cycle (drawing in and then pushing out) it emits a message reporting how many milliliters of water it pumped.
+
+## Results
+The pump was put into operation mid-July 2021 and has been emptying the dedumidifier tank ever since.
+One thing that falls short of meeting all the requirements is that it is not as quiet as I would like. It's not really loud, at least not louder than the dehumidifier fan, but I wanted it to be almost inaudible.
+The noise comes from the DC gearmotor. I think using a brushless DC gearmotor might make it run quieter.
 
