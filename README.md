@@ -11,7 +11,7 @@ There were a few motivations for this project:
 3. I like projects that involve microcontrollers
 
 ## Requirements / Design Goals
-* high static head (water needs to be pumped from the basement floor to hanging plants over the deck)
+* high static head (water needs to be pumped from the basement floor up to hanging plants over the deck)
 * self-priming
 * can be run dry without damage
 * automatically turn on and off
