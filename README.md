@@ -1,5 +1,5 @@
 # WaterPump
-High static head / low flow water pump to empty my dehumidifier tank and water plants.
+High static head / low flow water pump to empty my dehumidifier tank and water my plants.
 This pump uses a 60ml plastic syringe, two one-way valves, a DC gearmotor, and a microcontroller.
 
 ![Water Pump](/images/WaterPumpFigure.png)
