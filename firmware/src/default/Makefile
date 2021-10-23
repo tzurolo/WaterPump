@@ -4,7 +4,7 @@
 
 ## General Flags
 PROJECT = WaterPump
-MCU = atmega168p
+MCU = atmega328p
 F_CPU = 20000000
 TARGET = WaterPump.elf
 CC = avr-gcc.exe
