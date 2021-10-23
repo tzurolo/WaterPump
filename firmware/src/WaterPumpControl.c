@@ -11,6 +11,7 @@
 
 #include "Console.h"
 #include "StringInteger.h"
+#include "MSVS_AVR.h"
 #define DEBUG_TRACE 1
 
 #define FLOAT_SENSOR_DIR DDRC

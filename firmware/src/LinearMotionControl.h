@@ -14,15 +14,17 @@
 typedef enum {
     lmcc_none,
     lmcc_moveToPosition,
-    lmcc_brakeToStop,
     lmcc_findHomePosition
 } LinearMotionControl_command;
 
 typedef enum {
     lmcs_stopped,
+    lmcs_startingToMoveToPosition,
     lmcs_movingToPosition,
     lmcs_brakingToStop,
-    lmcs_searchingForHomePosition
+    lmcs_startingToSearchForHomePosition,
+    lmcs_searchingForHomePosition,
+    lmcs_stalled
 } LinearMotionControl_state;
 
 typedef struct LinearMotionControl_struct {
@@ -34,7 +36,6 @@ typedef struct LinearMotionControl_struct {
     IOPortBitfield_t homePositionSensorInput;
     PinChangeMonitor_t homePositionSensorInputChangeMonitor;
     bool foundHomePosition;
-    bool hadNonzeroSpeed;
     SystemTime_t timeoutTimer;
 } LinearMotionControl_t;
 

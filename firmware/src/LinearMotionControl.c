@@ -13,12 +13,13 @@
 #include "Console.h"
 #include "StringInteger.h"
 #include <avr/io.h>
+#include "MSVS_AVR.h"
 
 #include "Console.h"
 
 #define DEBUG_TRACE 0
 
-#define TARGET_POSITION_TIMEOUT_TIME 2000
+#define MOTOR_STARTUP_TIMEOUT_TIME 100
 
 #define M1A_PIN PD5
 #define M1A_PORT PORTD
@@ -87,6 +88,28 @@ static void motorCoast(void) {
     M1B_PORT &= ~(1 << M1B_PIN);
 }
 
+static void brakeToStop(
+    LinearMotionControl_t* _this)
+{
+    motorBrake();
+    _this->state = lmcs_brakingToStop;
+#if DEBUG_TRACE
+    Console_printLineP(PSTR("braking"));
+#endif
+}
+
+static void handleStall(
+    LinearMotionControl_t* _this)
+{
+    CharString_define(40, msg);
+    CharString_appendP(PSTR("stall detected in state: "), &msg);
+    StringInteger_appendDecimal(_this->state, 1, 0, &msg);
+    Console_printLineCS(&msg);
+
+    motorCoast();
+    _this->state = lmcs_stalled;
+}
+
 static void homePositionSensorChangeCB(
     const bool pinState,
     void* clientData)
@@ -117,14 +140,6 @@ void LinearMotionControl_init(
     PinChangeMonitor_enable(&_this->homePositionSensorInputChangeMonitor);
     _this->foundHomePosition = false;
 
-    // for small movements it is possible that we reach the
-    // target position before speed is computed by the tachometer.
-    // In this case we read zero speed and may falsely conclude that
-    // the motor has stopped. We need to wait until we have seen
-    // a nonzero speed before we accept a speed of zero as an
-    // indication that the motor has stopped
-    _this->hadNonzeroSpeed = false;
-
     // set up motor driver pins - make them outputs
     M1A_DIR |= (1 << M1A_PIN);
     M1B_DIR |= (1 << M1B_PIN);
@@ -148,13 +163,14 @@ bool LinearMotionControl_moveToPosition(
 void LinearMotionControl_brakeToStop(
     LinearMotionControl_t* _this)
 {
-    _this->command = lmcc_brakeToStop;
+    brakeToStop(_this);
 }
 
 bool LinearMotionControl_isStopped(
     LinearMotionControl_t* _this)
 {
-    return _this->state == lmcs_stopped;
+    return ((_this->state == lmcs_stopped) ||
+            (_this->state == lmcs_stalled));
 }
 
 void LinearMotionControl_findHomePosition(
@@ -183,16 +199,6 @@ bool LinearMotionControl_homePositionIsKnown(
     return _this->foundHomePosition;
 }
 
-static void brakeToStop(
-    LinearMotionControl_t* _this)
-{
-    motorBrake();
-    _this->state = lmcs_brakingToStop;
-#if DEBUG_TRACE
-    Console_printLineP(PSTR("braking"));
-#endif
-}
-
 void LinearMotionControl_task(
     LinearMotionControl_t* _this)
 {
@@ -206,16 +212,14 @@ void LinearMotionControl_task(
                         // move forward
                         TachometerOdometer_setDirection(tod_forward, &_this->to);
                         motorForward(_this->motorPWM);
-                        SystemTime_futureTime(TARGET_POSITION_TIMEOUT_TIME, &_this->timeoutTimer);
-                        _this->state = lmcs_movingToPosition;
-                        _this->hadNonzeroSpeed = false;
+                        SystemTime_futureTime(MOTOR_STARTUP_TIMEOUT_TIME, &_this->timeoutTimer);
+                        _this->state = lmcs_startingToMoveToPosition;
                     } else if (_this->targetPosition < currentPosition) {
                         // move reverse
                         TachometerOdometer_setDirection(tod_reverse, &_this->to);
                         motorReverse(_this->motorPWM);
-                        SystemTime_futureTime(TARGET_POSITION_TIMEOUT_TIME, &_this->timeoutTimer);
-                        _this->state = lmcs_movingToPosition;
-                        _this->hadNonzeroSpeed = false;
+                        SystemTime_futureTime(MOTOR_STARTUP_TIMEOUT_TIME, &_this->timeoutTimer);
+                        _this->state = lmcs_startingToMoveToPosition;
                     }
                     }
                     break;
@@ -231,24 +235,28 @@ void LinearMotionControl_task(
                         TachometerOdometer_setDirection(tod_forward, &_this->to);
                         motorForward(_this->motorPWM);
                     }
-                    SystemTime_futureTime(TARGET_POSITION_TIMEOUT_TIME, &_this->timeoutTimer);
-                    _this->state = lmcs_searchingForHomePosition;
+                    SystemTime_futureTime(MOTOR_STARTUP_TIMEOUT_TIME, &_this->timeoutTimer);
+                    _this->state = lmcs_startingToSearchForHomePosition;
                     break;
                 default:
                     break;
             }
             _this->command = lmcc_none;
             break;
+        case lmcs_startingToMoveToPosition:
+            if (TachometerOdometer_speed(&_this->to) != 0) {
+                // we have sucessfully begun moving
+                _this->state = lmcs_movingToPosition;
+            } else if (SystemTime_timeHasArrived(&_this->timeoutTimer)) {
+                // motor did not start moving in time
+                handleStall(_this);
+            }
+            break;
         case lmcs_movingToPosition: {
             const TachometerOdometer_direction_t dir =
                 TachometerOdometer_direction(&_this->to);
             const int16_t pos = TachometerOdometer_position(&_this->to);
-            const uint8_t speed = TachometerOdometer_speed(&_this->to);
-            if (speed != 0) {
-                _this->hadNonzeroSpeed = true;
-            }
-            if ((_this->command == lmcc_brakeToStop) ||
-                ((dir == tod_forward) && (pos >= _this->targetPosition)) ||
+            if (((dir == tod_forward) && (pos >= _this->targetPosition)) ||
                 ((dir == tod_reverse) && (pos <= _this->targetPosition))) {
 #if DEBUG_TRACE
                 CharString_define(40, msg);
@@ -260,22 +268,14 @@ void LinearMotionControl_task(
                 StringInteger_appendDecimal(speed, 1, 0, &msg);
                 Console_printLineCS(&msg);
 #endif
-                if (_this->command == lmcc_brakeToStop) {
-                    _this->command = lmcc_none;
-                }
                 brakeToStop(_this);
-            } else if (SystemTime_timeHasArrived(&_this->timeoutTimer)) {
-                motorCoast();
-                _this->state = lmcs_stopped;
+            } else if (TachometerOdometer_speed(&_this->to) == 0) {
+                handleStall(_this);
             }
             }
             break;
-        case lmcs_brakingToStop: {
-            const uint8_t speed = TachometerOdometer_speed(&_this->to);
-            if (speed != 0) {
-                _this->hadNonzeroSpeed = true;
-            }
-            if ((speed == 0) && _this->hadNonzeroSpeed) {
+        case lmcs_brakingToStop:
+            if (TachometerOdometer_speed(&_this->to) == 0) {
                 motorCoast();
 #if DEBUG_TRACE
                 CharString_define(40, msg);
@@ -286,14 +286,18 @@ void LinearMotionControl_task(
 #endif
                 _this->state = lmcs_stopped;
             }
+            break;
+        case lmcs_startingToSearchForHomePosition:
+            if (TachometerOdometer_speed(&_this->to) != 0) {
+                // we have sucessfully begun searching
+                _this->state = lmcs_searchingForHomePosition;
+            } else if (SystemTime_timeHasArrived(&_this->timeoutTimer)) {
+                // motor did not start moving in time
+                handleStall(_this);
             }
             break;
         case lmcs_searchingForHomePosition:
-            if (TachometerOdometer_speed(&_this->to) != 0) {
-                _this->hadNonzeroSpeed = true;
-            }
-            if (_this->foundHomePosition ||
-                (_this->command == lmcc_brakeToStop)) {
+            if (_this->foundHomePosition) {
 #if DEBUG_TRACE
                 CharString_define(40, msg);
                 CharString_appendP(PSTR("homing speed: "), &msg);
@@ -302,10 +306,11 @@ void LinearMotionControl_task(
                 Console_printLineCS(&msg);
 #endif
                 brakeToStop(_this);
-            } else if (SystemTime_timeHasArrived(&_this->timeoutTimer)) {
-                motorCoast();
-                _this->state = lmcs_stopped;
+            } else if (TachometerOdometer_speed(&_this->to) == 0) {
+                handleStall(_this);
             }
+            break;
+        case lmcs_stalled:
             break;
         default:
             break;
