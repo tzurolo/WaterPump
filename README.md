@@ -60,7 +60,7 @@ For absolute position there is also a reflectance sensor that tells when the plu
 * (2) Check Valve, 1/4 Inch 6mm PVDF Wear-Resistant One-Way Check Valve for Fuel Gas Liquid Air
 
 ## Tank sensor
-(Not shown yet - I'll pull it out of the tank after the dehumidification season).
+![Tank sensor](/images/TankSensor.png)
 This sensor is mounted in the dehumidifier tank and detects when the tank becomes full.
 The sensor consists of a Pololu QTR-1A reflectance sensor and a ping pong ball in an acrylic cage.
 When the ball floats up to the reflectance sensor a signal goes to the microcontroller telling it the tank is full.
